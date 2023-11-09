@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="720.0" prefWidth="1280.0" spacing="20.0" style="-fx-background-color: edf2e9;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.paintkotlin.PaintController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <HBox prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <ComboBox fx:id="shapesBox" prefWidth="150.0" value="Линия">
+            <HBox.margin>
+               <Insets left="10.0" top="15.0" />
+            </HBox.margin>
+         </ComboBox>
+         <ColorPicker fx:id="fillColorBox">
+            <HBox.margin>
+               <Insets left="10.0" top="15.0" />
+            </HBox.margin>
+         </ColorPicker>
+         <ColorPicker fx:id="strokeColorBox">
+            <HBox.margin>
+               <Insets left="10.0" top="15.0" />
+            </HBox.margin>
+         </ColorPicker>
+      </children>
+   </HBox>
+   <Pane fx:id="paintField" maxHeight="650.0" maxWidth="1240.0" onMouseDragged="#onPaintFieldMouseDragged" onMousePressed="#onPaintFieldMousePressed" onMouseReleased="#onPaintFieldMouseReleased" prefHeight="650.0" prefWidth="1240.0" style="-fx-background-color: #FFFFFF;">
+      <cursor>
+         <Cursor fx:constant="NW_RESIZE" />
+      </cursor></Pane>
+   <cursor>
+      <Cursor fx:constant="DEFAULT" />
+   </cursor>
+</VBox>
