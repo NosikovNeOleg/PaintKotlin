@@ -7,7 +7,6 @@ enum class ShapesNames(private val label: String) {
     TRIANGLE("Треугольник"),
     CIRCLE("Круг");
 
-
     open fun getLabel() = label
 
 }

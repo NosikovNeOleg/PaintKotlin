@@ -75,7 +75,6 @@ class PaintController {
                     calculator.calculateTriangle(shape as Polygon,startPoint, x,y)
                 }
             }
-
             }
         }
     }
