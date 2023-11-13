@@ -11,17 +11,29 @@ import javafx.scene.shape.Polygon
 import javafx.scene.shape.Rectangle
 import javafx.scene.shape.Shape
 import com.example.paintkotlin.PaintCalculator.calculateShape
+import javafx.event.EventHandler
+import javafx.scene.Cursor
+import javafx.scene.control.Label
+import javafx.scene.layout.HBox
+import javafx.scene.shape.MoveTo
 
 class PaintController {
 
+
     @FXML
-    private lateinit var shapesBox: ComboBox<String>
+    private var shapesBox: ComboBox<String>? = null
     @FXML
-    private lateinit var fillColorBox: ColorPicker
+    private var instrumentsBox: ComboBox<String>? = null
     @FXML
-    private lateinit var strokeColorBox : ColorPicker
+    private var fillColorBox: ColorPicker? = null
     @FXML
-    private lateinit var paintField : Pane
+    private var strokeColorBox : ColorPicker? = null
+    @FXML
+    private var labelsBox: HBox? = null
+    @FXML
+    private var controlsBox: HBox? = null
+    @FXML
+    private var paintField : Pane? = null
 
     private var shape : Shape? = null
     private var startPoint : Point? = null
@@ -31,14 +43,14 @@ class PaintController {
 
     @FXML
     private fun onPaintFieldMousePressed(mouseEvent: MouseEvent) {
-        if (!isDrawing) {
+        if (!isDrawing && instrumentsBox?.value == FIGURE) {
             isDrawing = true
             val x = mouseEvent.x
             val y = mouseEvent.y
             startPoint = Point(x,y)
-            when (shapesBox.value) {
+            when (shapesBox?.value) {
                 ShapesNames.LINE.getLabel() -> shape = Line(x,y,x,y)
-                ShapesNames.CIRCLE.getLabel() -> shape = Circle(x, y, 0.0, fillColorBox.value)
+                ShapesNames.CIRCLE.getLabel() -> shape = Circle(x, y, 0.0, fillColorBox?.value)
                 ShapesNames.TRIANGLE.getLabel() -> shape = Polygon()
                 ShapesNames.RECTANGLE.getLabel() -> shape = Rectangle(0.0,0.0)
                 ShapesNames.STAR.getLabel() -> shape = Polygon()
@@ -46,9 +58,9 @@ class PaintController {
             }
 
             with (shape) {
-                this?.fill = fillColorBox.value
-                this?.stroke = strokeColorBox.value
-                paintField.children.add(shape)
+                this?.fill = fillColorBox?.value
+                this?.stroke = strokeColorBox?.value
+                paintField?.children?.add(shape)
             }
         }
     }
@@ -58,7 +70,7 @@ class PaintController {
         if (isDrawing) {
             val x = mouseEvent.x
             val y = mouseEvent.y
-            if (paintField.isHover){
+            if (paintField?.isHover == true){
                 calculateShape(shape,startPoint,x,y)
             }
         }
@@ -67,6 +79,29 @@ class PaintController {
     @FXML
     private fun onPaintFieldMouseReleased() {
         if (isDrawing) {
+            with (shape) {
+                if (this != null) {
+                    addEventHandler(MouseEvent.MOUSE_ENTERED, EventHandler {
+                        cursor = Cursor.HAND
+                    })
+                    addEventHandler(MouseEvent.MOUSE_PRESSED, EventHandler {
+                        if (instrumentsBox?.value == CHOOSE) {
+                            cursor = Cursor.CLOSED_HAND
+                        }
+                    })
+                    addEventHandler(MouseEvent.MOUSE_DRAGGED, EventHandler {
+                        if (instrumentsBox?.value == CHOOSE) {
+                            if (startPoint != null) {
+                                shape?.relocate(it.x,it.y)
+                            }
+                        }
+                    })
+                    addEventHandler(MouseEvent.MOUSE_RELEASED, EventHandler {
+                        shape?.cursor = Cursor.DEFAULT
+
+                    })
+                }
+            }
             isDrawing = false
         }
     }
@@ -74,9 +109,29 @@ class PaintController {
 
     @FXML
     private fun initialize() {
-        shapesBox.items.addAll(
+        shapesBox?.items?.addAll(
             ShapesNames.values()
                 .map { value -> value.getLabel() }
         )
+        instrumentsBox?.items?.addAll(
+                listOf(
+                        CHOOSE,
+                        FIGURE
+                )
+        )
+        controlsBox?.children?.let {
+            for (item in it) {
+                labelsBox?.children?.addAll(
+                        Label().apply {
+                            this.text = item.accessibleText
+                        }
+                )
+            }
+        }
+    }
+
+    companion object {
+        const val CHOOSE = "Выбрать"
+        const val FIGURE = "Фигура"
     }
 }

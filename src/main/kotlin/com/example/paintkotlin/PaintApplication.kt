@@ -3,11 +3,9 @@ package com.example.paintkotlin
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
-import javafx.scene.control.ComboBox
 import javafx.stage.Stage
 
 class PaintApplication : Application() {
-
     override fun start(stage: Stage) {
         val fxmlLoader = FXMLLoader(PaintApplication::class.java.getResource(RESOURCE_NAME))
         val scene = Scene(fxmlLoader.load(), WINDOW_WIDTH, WINDOW_HEIGHT)
