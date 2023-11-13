@@ -10,8 +10,7 @@ import javafx.scene.shape.Line
 import javafx.scene.shape.Polygon
 import javafx.scene.shape.Rectangle
 import javafx.scene.shape.Shape
-import kotlin.math.pow
-import kotlin.math.sqrt
+import com.example.paintkotlin.PaintCalculator.calculateShape
 
 class PaintController {
 
@@ -29,8 +28,6 @@ class PaintController {
 
     private var isDrawing : Boolean = false
 
-    private val calculator : PaintCalculator = PaintCalculator
-
 
     @FXML
     private fun onPaintFieldMousePressed(mouseEvent: MouseEvent) {
@@ -44,6 +41,7 @@ class PaintController {
                 ShapesNames.CIRCLE.getLabel() -> shape = Circle(x, y, 0.0, fillColorBox.value)
                 ShapesNames.TRIANGLE.getLabel() -> shape = Polygon()
                 ShapesNames.RECTANGLE.getLabel() -> shape = Rectangle(0.0,0.0)
+                ShapesNames.STAR.getLabel() -> shape = Polygon()
                 else -> println("Wrong type of shape")
             }
 
@@ -58,10 +56,10 @@ class PaintController {
     @FXML
     private fun onPaintFieldMouseDragged(mouseEvent: MouseEvent) {
         if (isDrawing) {
-            val x: Double = mouseEvent.x
-            val y: Double = mouseEvent.y
+            val x = mouseEvent.x
+            val y = mouseEvent.y
             if (paintField.isHover){
-                calculator.calculateShape(shape,startPoint,x,y)
+                calculateShape(shape,startPoint,x,y)
             }
         }
     }

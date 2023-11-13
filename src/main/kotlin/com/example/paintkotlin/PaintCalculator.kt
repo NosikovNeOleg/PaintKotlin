@@ -10,8 +10,6 @@ import kotlin.math.sqrt
 
 object PaintCalculator {
 
-
-
     fun calculateShape(shape: Shape?, startPoint: Point?, x: Double, y: Double) {
         if (startPoint != null) {
             when (shape) {
