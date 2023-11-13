@@ -1,6 +1,6 @@
 package com.example.paintkotlin
 
-class Point(
+data class Point(
     val x : Double,
     val y : Double
 )

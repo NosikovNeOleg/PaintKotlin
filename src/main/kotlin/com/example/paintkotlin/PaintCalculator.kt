@@ -4,49 +4,70 @@ import javafx.scene.shape.Circle
 import javafx.scene.shape.Line
 import javafx.scene.shape.Polygon
 import javafx.scene.shape.Rectangle
+import javafx.scene.shape.Shape
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class PaintCalculator {
+object PaintCalculator {
 
-    fun calculateRectangle(rectangle: Rectangle, startPoint : Point, x : Double, y : Double) {
+
+
+    fun calculateShape(shape: Shape?, startPoint: Point?, x: Double, y: Double) {
+        if (startPoint != null) {
+            when (shape) {
+                is Rectangle -> calculateRectangle(shape, startPoint, x, y)
+                is Polygon -> calculatePolygon(shape, startPoint, x, y)
+                is Circle -> calculateCircle(shape, startPoint, x, y)
+                is Line -> calculateLine(shape, x, y)
+            }
+        }
+    }
+
+    private fun calculateRectangle(rectangle: Rectangle, startPoint: Point, x: Double, y: Double) {
         val tempWidth = x - startPoint.x
         val tempHeight = y - startPoint.y
+        with(rectangle) {
         if (tempWidth > 0) {
-            rectangle.width = tempWidth
-            rectangle.layoutX = x - rectangle.width
+            width = tempWidth
+            layoutX = x - width
         } else {
-            rectangle.width = -tempWidth
-            rectangle.layoutX = x
+            width = -tempWidth
+            layoutX = x
         }
 
         if (tempHeight > 0) {
-            rectangle.height = tempHeight
-            rectangle.layoutY = y - rectangle.height
+            height = tempHeight
+            layoutY = y - height
         } else {
-            rectangle.height = -tempHeight
-            rectangle.layoutY = y
+            height = -tempHeight
+            layoutY = y
+        }
         }
     }
-
-    fun calculateCircle(circle: Circle, startPoint: Point, x: Double, y: Double) {
+    private fun calculateCircle(circle: Circle, startPoint: Point, x: Double, y: Double) {
         circle.radius = sqrt((x - startPoint.x).pow(2) + (y - startPoint.y).pow(2))
     }
 
-    fun calculateTriangle(triangle : Polygon, startPoint: Point, x: Double, y: Double) {
-        triangle.points.clear()
-            triangle.points.addAll(
-                listOf(
-                    startPoint.x, startPoint.y,
-                    x, y,
-                    x - (x - startPoint.x) / 2 + (y - startPoint.y) / 2, y - (x - startPoint.x) / 2 - (y - startPoint.y) / 2
+    private fun calculatePolygon(shape: Polygon, startPoint: Point, x: Double, y: Double) {
+            with(shape) {
+                points.clear()
+                points.addAll(
+                    listOf(
+                        startPoint.x,
+                        startPoint.y,
+                        x,
+                        y,
+                        x - (x - startPoint.x) / 2 + (y - startPoint.y) / 2,
+                        y - (x - startPoint.x) / 2 - (y - startPoint.y) / 2
+                    )
                 )
-            )
-
+            }
     }
 
-    fun calculateLine(line : Line, x: Double, y: Double) {
-        line.endX = x
-        line.endY = y
+    private fun calculateLine(line: Line, x: Double, y: Double) {
+        with(line){
+            endX = x
+            endY = y
+        }
     }
 }
