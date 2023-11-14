@@ -13,6 +13,7 @@ import javafx.scene.shape.Shape
 import com.example.paintkotlin.PaintCalculator.calculateShape
 import javafx.event.EventHandler
 import javafx.scene.Cursor
+import javafx.scene.Node
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
 import javafx.scene.transform.Translate
@@ -20,7 +21,6 @@ import javafx.stage.FileChooser
 import javafx.stage.Stage
 
 class PaintController {
-
 
     @FXML
     private var shapesBox: ComboBox<String>? = null
@@ -54,68 +54,70 @@ class PaintController {
 
     @FXML
     private fun onPaintFieldMousePressed(mouseEvent: MouseEvent) {
-        if (!isDrawing && instrumentsBox?.value == Companion.FIGURE) {
-            isDrawing = true
-            val x = mouseEvent.x
-            val y = mouseEvent.y
-            startPoint = Point(x, y)
-            when (shapesBox?.value) {
-                ShapesNames.LINE.getLabel() -> shape = Line(x, y, x, y)
-                ShapesNames.CIRCLE.getLabel() -> shape = Circle(x, y, 0.0, fillColorBox?.value)
-                ShapesNames.TRIANGLE.getLabel() -> shape = Polygon()
-                ShapesNames.RECTANGLE.getLabel() -> shape = Rectangle(0.0, 0.0)
-                ShapesNames.STAR.getLabel() -> shape = Polygon()
-                else -> println("Wrong type of shape")
-            }
-
-            with(shape) {
-                this?.fill = fillColorBox?.value
-                this?.stroke = strokeColorBox?.value
-                paintField?.children?.add(shape)
-            }
+        if (isDrawing) {
+            return
+        }
+        isDrawing = true
+        val x = mouseEvent.x
+        val y = mouseEvent.y
+        startPoint = Point(x, y)
+        shape = when (shapesBox?.value) {
+            ShapesNames.LINE.label -> Line(x, y, x, y)
+            ShapesNames.CIRCLE.label -> Circle(x, y, 0.0, fillColorBox?.value)
+            ShapesNames.TRIANGLE.label -> Polygon()
+            ShapesNames.RECTANGLE.label -> Rectangle(0.0, 0.0)
+            ShapesNames.STAR.label -> Polygon()
+            else -> null
+        }
+        shape?.run {
+            fill = fillColorBox?.value
+            stroke = strokeColorBox?.value
+            paintField?.children?.add(shape)
         }
     }
 
+
     @FXML
     private fun onPaintFieldMouseDragged(mouseEvent: MouseEvent) {
-        if (isDrawing) {
-            val x = mouseEvent.x
-            val y = mouseEvent.y
-            if (paintField?.isHover == true) {
-                calculateShape(shape, startPoint, x, y)
-            }
+        if (!isDrawing && paintField?.isHover != true) {
+            return
+        }
+        val x = mouseEvent.x
+        val y = mouseEvent.y
+        startPoint?.let {
+            calculateShape(shape, it, x, y)
         }
     }
 
     @FXML
     private fun onPaintFieldMouseReleased() {
         if (isDrawing) {
-            with(shape) {
-                this?.let {
-                    addEventHandler(MouseEvent.MOUSE_ENTERED, EventHandler {
-                        if (instrumentsBox?.value == Companion.CHOOSE) {
-                            cursor = Cursor.HAND
-                        }
-                    })
-                    addEventHandler(MouseEvent.MOUSE_PRESSED, EventHandler {
-                        if (instrumentsBox?.value == Companion.CHOOSE) {
-                            cursor = Cursor.CLOSED_HAND
-                        }
-                    })
-                    addEventHandler(MouseEvent.MOUSE_DRAGGED, EventHandler {
-                        if (instrumentsBox?.value == Companion.CHOOSE) {
-                            println(String.format("x: ${it.x} | ${it.sceneX} | ${it.screenX}"))
-                            println(String.format("layoutX: $layoutX"))
-                            val moveTo = Translate(it.x,it.y)
-                            transforms.add(moveTo)
+            shape?.run {
+                addEventHandler(MouseEvent.MOUSE_ENTERED, EventHandler {
+                    if (instrumentsBox?.value == CHOOSE) {
+                        cursor = Cursor.HAND
+                    }
+                })
+                addEventHandler(MouseEvent.MOUSE_PRESSED, EventHandler {
+                    if (instrumentsBox?.value == CHOOSE) {
+                        cursor = Cursor.CLOSED_HAND
+                    }
+                })
+                addEventHandler(MouseEvent.MOUSE_DRAGGED, EventHandler {
+                    if (instrumentsBox?.value != CHOOSE) {
+                        return@EventHandler
+                    }
+                    println(String.format("x: ${it.x} | ${it.sceneX} | ${it.screenX}"))
+                    println(String.format("layoutX: $layoutX"))
+                    val moveTo = Translate(it.x, it.y)
+                    transforms.add(moveTo)
 //                            this.translateX = it.sceneX
 //                            this.translateY = it.sceneY
-                        }
-                    })
-                    addEventHandler(MouseEvent.MOUSE_RELEASED, EventHandler {
-                        cursor = Cursor.DEFAULT
-                    })
-                }
+
+                })
+                addEventHandler(MouseEvent.MOUSE_RELEASED, EventHandler {
+                    cursor = Cursor.DEFAULT
+                })
             }
             isDrawing = false
             saveShapes()
@@ -124,22 +126,20 @@ class PaintController {
 
     @FXML
     private fun onSaveButtonClicked() {
-        val fileChooser = FileChooser()
-        fileChooser.title = SAVE_TITLE
-        fileChooser.extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.txt)", "*.txt"))
-        val file = fileChooser.showSaveDialog(stage)
-        saveShapes()?.let { ShapesSaver.save(file, it) }
+        FileChooser().apply {
+            title = SAVE_TITLE
+            extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.txt)", "*.txt"))
+            saveShapes()?.let { ShapesSaver.save(showSaveDialog(stage), it) }
+        }
     }
 
     @FXML
     private fun onLoadButtonClicked() {
-        val fileChooser = FileChooser()
-        fileChooser.title = SAVE_TITLE
-        fileChooser.extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.txt)", "*.txt"))
-        val file = fileChooser.showOpenDialog(stage)
-
-        paintField = Pane()
-        paintField?.children?.addAll( ShapesSaver.load(file) )
+        FileChooser().apply {
+            title = LOAD_TITLE
+            extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.txt)", "*.txt"))
+            paintField = Pane().apply { children?.addAll(ShapesSaver.load(showOpenDialog(stage))) }
+        }
     }
 
 
@@ -147,7 +147,7 @@ class PaintController {
     private fun initialize() {
         shapesBox?.items?.addAll(
             ShapesNames.values()
-                .map { value -> value.getLabel() }
+                .map { value -> value.label }
         )
         instrumentsBox?.items?.addAll(
             listOf(
@@ -169,13 +169,13 @@ class PaintController {
     private fun saveShapes(): List<Shape>? {
         paintField.let {
             return it?.children?.map {
-                it as Shape
+                Node
             }
         }
     }
 
 
-    companion object {
+    private companion object {
         private const val CHOOSE = "Выбрать"
         private const val FIGURE = "Фигура"
         private const val SAVE_TITLE = "Сохранить файл"

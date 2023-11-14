@@ -1,6 +1,5 @@
 package com.example.paintkotlin
 
-import javafx.beans.binding.DoubleExpression
 import javafx.scene.paint.Color
 import javafx.scene.shape.Shape
 import java.io.*
