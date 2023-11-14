@@ -12,12 +12,12 @@
    <HBox fx:id="labelsBox" prefHeight="100.0" prefWidth="1240.0" />
    <HBox fx:id="controlsBox" prefHeight="23.0" prefWidth="1237.0">
       <children>
-         <ComboBox fx:id="instrumentsBox" prefWidth="150.0" value="Выбрать" accessibleText="Инструмент">
+         <ComboBox fx:id="instrumentsBox" accessibleText="Инструмент" prefWidth="150.0" value="Выбрать">
             <HBox.margin>
                <Insets left="10.0" top="5.0" />
             </HBox.margin>
          </ComboBox>
-         <ComboBox fx:id="shapesBox" prefWidth="150.0" value="Линия" accessibleText="Фигура">
+         <ComboBox fx:id="shapesBox" accessibleText="Фигура" prefWidth="150.0" value="Линия">
             <HBox.margin>
                <Insets left="10.0" top="5.0" />
             </HBox.margin>
@@ -32,6 +32,14 @@
                <Insets left="10.0" top="5.0" />
             </HBox.margin>
          </ColorPicker>
+         <Button fx:id="saveButton" mnemonicParsing="false" onMouseClicked="#onSaveButtonClicked" text="Сохранить">
+            <HBox.margin>
+               <Insets left="10.0" top="5.0" />
+            </HBox.margin></Button>
+         <Button fx:id="loadButton" mnemonicParsing="false" onMouseClicked="#onLoadButtonClicked" text="Загрузить">
+            <HBox.margin>
+               <Insets left="10.0" top="5.0" />
+            </HBox.margin></Button>
       </children>
       <VBox.margin>
          <Insets />
