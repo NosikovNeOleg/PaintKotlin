@@ -9,29 +9,44 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <HBox prefHeight="100.0" prefWidth="200.0">
+   <HBox fx:id="labelsBox" prefHeight="100.0" prefWidth="1240.0" />
+   <HBox fx:id="controlsBox" prefHeight="23.0" prefWidth="1237.0">
       <children>
-         <ComboBox fx:id="shapesBox" prefWidth="150.0" value="Линия">
+         <ComboBox fx:id="instrumentsBox" accessibleText="Инструмент" prefWidth="150.0" value="Выбрать">
             <HBox.margin>
-               <Insets left="10.0" top="15.0" />
+               <Insets left="10.0" top="5.0" />
             </HBox.margin>
          </ComboBox>
-         <ColorPicker fx:id="fillColorBox">
+         <ComboBox fx:id="shapesBox" accessibleText="Фигура" prefWidth="150.0" value="Линия">
             <HBox.margin>
-               <Insets left="10.0" top="15.0" />
+               <Insets left="10.0" top="5.0" />
+            </HBox.margin>
+         </ComboBox>
+         <ColorPicker fx:id="fillColorBox" accessibleText="Цвет заливки">
+            <HBox.margin>
+               <Insets left="10.0" top="5.0" />
             </HBox.margin>
          </ColorPicker>
-         <ColorPicker fx:id="strokeColorBox">
+         <ColorPicker fx:id="strokeColorBox" accessibleText="Цвет обводки">
             <HBox.margin>
-               <Insets left="10.0" top="15.0" />
+               <Insets left="10.0" top="5.0" />
             </HBox.margin>
          </ColorPicker>
+         <Button fx:id="saveButton" mnemonicParsing="false" onMouseClicked="#onSaveButtonClicked" text="Сохранить">
+            <HBox.margin>
+               <Insets left="10.0" top="5.0" />
+            </HBox.margin></Button>
+         <Button fx:id="loadButton" mnemonicParsing="false" onMouseClicked="#onLoadButtonClicked" text="Загрузить">
+            <HBox.margin>
+               <Insets left="10.0" top="5.0" />
+            </HBox.margin></Button>
       </children>
+      <VBox.margin>
+         <Insets />
+      </VBox.margin>
    </HBox>
    <Pane fx:id="paintField" maxHeight="650.0" maxWidth="1240.0" onMouseDragged="#onPaintFieldMouseDragged" onMousePressed="#onPaintFieldMousePressed" onMouseReleased="#onPaintFieldMouseReleased" prefHeight="650.0" prefWidth="1240.0" style="-fx-background-color: #FFFFFF;">
-      <cursor>
-         <Cursor fx:constant="NW_RESIZE" />
-      </cursor></Pane>
+   </Pane>
    <cursor>
       <Cursor fx:constant="DEFAULT" />
    </cursor>
