@@ -94,14 +94,15 @@ class PaintController {
             var dragDelta: Point? = null
             shape?.run {
                 addEventHandler(MouseEvent.MOUSE_ENTERED) { changeCursor(this, Cursor.HAND) }
-                addEventHandler(MouseEvent.MOUSE_PRESSED) { changeCursor(this, Cursor.CLOSED_HAND)
-                    dragDelta = Point(this.layoutX - it.sceneX,this.layoutY - it.sceneY) }
+                addEventHandler(MouseEvent.MOUSE_PRESSED) {
+                    changeCursor(this, Cursor.CLOSED_HAND)
+                    dragDelta = Point(this.layoutX - it.sceneX, this.layoutY - it.sceneY)
+                }
                 addEventHandler(MouseEvent.MOUSE_RELEASED) { changeCursor(this, Cursor.DEFAULT) }
                 addEventHandler(MouseEvent.MOUSE_DRAGGED, EventHandler {
                     if (instrumentsBox?.value != CHOOSE) {
                         return@EventHandler
                     }
-
                     dragDelta?.let { delta ->
                         layoutX = it.sceneX + delta.x
                         layoutY = it.sceneY + delta.y
@@ -118,9 +119,9 @@ class PaintController {
     private fun onSaveButtonClicked() {
         FileChooser().apply {
             title = SAVE_TITLE
-            extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.txt)", "*.txt"))
+            extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.json)", "*.json"))
             showSaveDialog(stage)?.let { file ->
-                saveShapes()?.let { ShapesSaver.save(file, it) }
+                saveShapes()?.let { ShapesSaverImpl.save(file, it) }
             }
         }
     }
@@ -129,9 +130,12 @@ class PaintController {
     private fun onLoadButtonClicked() {
         FileChooser().apply {
             title = LOAD_TITLE
-            extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.txt)", "*.txt"))
+            extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.json)", "*.json"))
             showOpenDialog(stage)?.let {
-                paintField = Pane().apply { children?.addAll(ShapesSaver.load(it)) }
+                paintField?.children?.run {
+                    clear()
+                    addAll(ShapesSaverImpl.load(it))
+                }
             }
         }
     }
