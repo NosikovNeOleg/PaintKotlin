@@ -22,7 +22,6 @@ class PaintApplication : Application() {
         const val TITLE = "MicroPaint!"
         const val RESOURCE_NAME = "paint-view.fxml"
     }
-
 }
 
 fun main() {

@@ -1,8 +1,8 @@
 package com.example.paintkotlin
 
-import javafx.scene.paint.Color
-import javafx.scene.shape.Shape
-import java.io.*
+import javafx.collections.ObservableList
+import javafx.scene.shape.Polygon
+import kotlinx.serialization.Serializable
 
 data class Point(
     val x : Double,
@@ -10,39 +10,29 @@ data class Point(
 )
 
 
-data class ShapeDTO(
-    val x : Double,
-    val y : Double,
-    val startX : Double,
-    val startY : Double,
-    val endY : Double,
-    val endX : Double,
-    val stroke : Color,
+class Triangle : Polygon()
+
+class Star : Polygon()
+
+@Serializable
+data class ShapeDTO (
+    val stroke : String,
+    val fill : String,
     val strokeWidth : Double,
-    val width : Double,
-    val height : Double,
-    val points : Array<Double>,
-    val fill : Color,
-    val centerX : Double,
-    val centerY : Double
-)
-
-object ShapesSaver {
-
-    private val fileOutputStream = null
-
-    fun save(file: File, input: List<ShapeDTO>) {
-        ObjectOutputStream(FileOutputStream(file)).use {
-                it.write(input.toString().toByteArray())
-        }
-    }
-
-    fun load(file: File): ArrayList<Shape> {
-
-        FileInputStream(file).use {
-            ObjectInputStream(it).use { o ->
-                return o.readObject() as ArrayList<Shape>
-            }
-        }
-    }
+    val name : ShapesNames
+) {
+    var x : Double? = null
+    var y : Double? = null
+    var startX : Double? = null
+    var startY : Double? = null
+    var endY : Double? = null
+    var endX : Double? = null
+    var width : Double? = null
+    var height : Double? = null
+    var points : ObservableList<Double>? = null
+    var centerX : Double? = null
+    var centerY : Double? = null
+    var layoutX : Double? = null
+    var layoutY : Double? = null
+    var radius : Double? = null
 }

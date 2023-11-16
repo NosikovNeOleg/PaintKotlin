@@ -1,24 +1,20 @@
 package com.example.paintkotlin
 
-import javafx.fxml.FXML
-import javafx.scene.control.ColorPicker
-import javafx.scene.control.ComboBox
-import javafx.scene.input.MouseEvent
-import javafx.scene.layout.Pane
-import javafx.scene.shape.Circle
-import javafx.scene.shape.Line
-import javafx.scene.shape.Polygon
-import javafx.scene.shape.Rectangle
-import javafx.scene.shape.Shape
 import com.example.paintkotlin.PaintCalculator.calculateShape
 import javafx.event.EventHandler
+import javafx.fxml.FXML
 import javafx.scene.Cursor
-import javafx.scene.Node
+import javafx.scene.control.ColorPicker
+import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
-import javafx.scene.transform.Translate
+import javafx.scene.layout.Pane
+import javafx.scene.paint.Color
+import javafx.scene.shape.*
 import javafx.stage.FileChooser
 import javafx.stage.Stage
+
 
 class PaintController {
 
@@ -54,7 +50,7 @@ class PaintController {
 
     @FXML
     private fun onPaintFieldMousePressed(mouseEvent: MouseEvent) {
-        if (isDrawing) {
+        if (isDrawing || instrumentsBox?.value == CHOOSE) {
             return
         }
         isDrawing = true
@@ -64,9 +60,10 @@ class PaintController {
         shape = when (shapesBox?.value) {
             ShapesNames.LINE.label -> Line(x, y, x, y)
             ShapesNames.CIRCLE.label -> Circle(x, y, 0.0, fillColorBox?.value)
-            ShapesNames.TRIANGLE.label -> Polygon()
+            ShapesNames.TRIANGLE.label -> Triangle()
             ShapesNames.RECTANGLE.label -> Rectangle(0.0, 0.0)
-            ShapesNames.STAR.label -> Polygon()
+            ShapesNames.STAR.label -> Star()
+            ShapesNames.ELLIPSE.label -> Ellipse(x, y, 0.0, 0.0)
             else -> null
         }
         shape?.run {
@@ -79,44 +76,36 @@ class PaintController {
 
     @FXML
     private fun onPaintFieldMouseDragged(mouseEvent: MouseEvent) {
-        if (!isDrawing && paintField?.isHover != true) {
+        if (instrumentsBox?.value == CHOOSE || !isDrawing || paintField?.isHover != true) {
             return
         }
         val x = mouseEvent.x
         val y = mouseEvent.y
-        startPoint?.let {
-            calculateShape(shape, it, x, y)
+        startPoint?.let { point ->
+            shape?.let { shape ->
+                calculateShape(shape, point, x, y)
+            }
         }
     }
 
     @FXML
     private fun onPaintFieldMouseReleased() {
         if (isDrawing) {
+            var dragDelta: Point? = null
             shape?.run {
-                addEventHandler(MouseEvent.MOUSE_ENTERED, EventHandler {
-                    if (instrumentsBox?.value == CHOOSE) {
-                        cursor = Cursor.HAND
-                    }
-                })
-                addEventHandler(MouseEvent.MOUSE_PRESSED, EventHandler {
-                    if (instrumentsBox?.value == CHOOSE) {
-                        cursor = Cursor.CLOSED_HAND
-                    }
-                })
+                addEventHandler(MouseEvent.MOUSE_ENTERED) { changeCursor(this, Cursor.HAND) }
+                addEventHandler(MouseEvent.MOUSE_PRESSED) { changeCursor(this, Cursor.CLOSED_HAND)
+                    dragDelta = Point(this.layoutX - it.sceneX,this.layoutY - it.sceneY) }
+                addEventHandler(MouseEvent.MOUSE_RELEASED) { changeCursor(this, Cursor.DEFAULT) }
                 addEventHandler(MouseEvent.MOUSE_DRAGGED, EventHandler {
                     if (instrumentsBox?.value != CHOOSE) {
                         return@EventHandler
                     }
-                    println(String.format("x: ${it.x} | ${it.sceneX} | ${it.screenX}"))
-                    println(String.format("layoutX: $layoutX"))
-                    val moveTo = Translate(it.x, it.y)
-                    transforms.add(moveTo)
-//                            this.translateX = it.sceneX
-//                            this.translateY = it.sceneY
 
-                })
-                addEventHandler(MouseEvent.MOUSE_RELEASED, EventHandler {
-                    cursor = Cursor.DEFAULT
+                    dragDelta?.let { delta ->
+                        layoutX = it.sceneX + delta.x
+                        layoutY = it.sceneY + delta.y
+                    }
                 })
             }
             isDrawing = false
@@ -124,12 +113,15 @@ class PaintController {
         }
     }
 
+
     @FXML
     private fun onSaveButtonClicked() {
         FileChooser().apply {
             title = SAVE_TITLE
             extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.txt)", "*.txt"))
-            saveShapes()?.let { ShapesSaver.save(showSaveDialog(stage), it) }
+            showSaveDialog(stage)?.let { file ->
+                saveShapes()?.let { ShapesSaver.save(file, it) }
+            }
         }
     }
 
@@ -138,7 +130,9 @@ class PaintController {
         FileChooser().apply {
             title = LOAD_TITLE
             extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.txt)", "*.txt"))
-            paintField = Pane().apply { children?.addAll(ShapesSaver.load(showOpenDialog(stage))) }
+            showOpenDialog(stage)?.let {
+                paintField = Pane().apply { children?.addAll(ShapesSaver.load(it)) }
+            }
         }
     }
 
@@ -155,6 +149,7 @@ class PaintController {
                 FIGURE
             )
         )
+        strokeColorBox?.value = Color.BLACK
         controlsBox?.children?.let {
             for (item in it) {
                 labelsBox?.children?.addAll(
@@ -169,7 +164,7 @@ class PaintController {
     private fun saveShapes(): List<Shape>? {
         paintField.let {
             return it?.children?.map {
-                Node
+                it as Shape
             }
         }
     }
@@ -181,4 +176,10 @@ class PaintController {
         private const val SAVE_TITLE = "Сохранить файл"
         private const val LOAD_TITLE = "Загрузить файл"
     }
+
+    val changeCursor = { shape: Shape, cursor: Cursor -> if (instrumentsBox?.value == CHOOSE) shape.cursor = cursor }
+}
+
+private operator fun Double.plus(x: Double?): Double {
+    return x ?: 0.0
 }

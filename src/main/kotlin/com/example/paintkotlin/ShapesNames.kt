@@ -6,6 +6,7 @@ enum class ShapesNames(val label: String) {
     RECTANGLE("Прямоугольник"),
     TRIANGLE("Треугольник"),
     STAR("Звезда"),
+    ELLIPSE("Эллипс"),
     CIRCLE("Круг");
 
 }
