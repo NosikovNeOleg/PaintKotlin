@@ -9,7 +9,7 @@ class PaintApplication : Application() {
     override fun start(stage: Stage) {
         val fxmlLoader = FXMLLoader(PaintApplication::class.java.getResource(RESOURCE_NAME))
         val scene = Scene(fxmlLoader.load(), WINDOW_WIDTH, WINDOW_HEIGHT)
-        with (stage) {
+        with(stage) {
             title = TITLE
             this.scene = scene
             show()
