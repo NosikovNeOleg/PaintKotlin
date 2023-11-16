@@ -16,7 +16,7 @@ class PaintApplication : Application() {
         }
     }
 
-    companion object {
+    private companion object {
         const val WINDOW_WIDTH = 1280.0
         const val WINDOW_HEIGHT = 720.0
         const val TITLE = "MicroPaint!"
