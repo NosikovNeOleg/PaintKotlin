@@ -77,10 +77,10 @@ object PaintCalculator {
         val tempWidth = x - startPoint.x
         val tempHeight = y - startPoint.y
         with(rectangle) {
-            width = if (tempWidth > 0) tempWidth else -tempWidth
+            width = abs(tempWidth)
             layoutX = if (tempWidth > 0) x - width else x
 
-            height = if (tempHeight > 0) tempHeight else -tempHeight
+            height = abs(tempHeight)
             layoutY = if (tempHeight > 0) y - height else y
         }
     }

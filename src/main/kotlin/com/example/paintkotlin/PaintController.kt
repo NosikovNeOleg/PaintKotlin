@@ -19,7 +19,7 @@ import javafx.stage.Stage
 class PaintController {
 
     @FXML
-    private var shapesBox: ComboBox<String>? = null
+    private var shapesBox: ComboBox<ShapesNames>? = null
 
     @FXML
     private var instrumentsBox: ComboBox<String>? = null
@@ -47,6 +47,8 @@ class PaintController {
 
     private var isDrawing: Boolean = false
 
+    private val shapeSaver : Saver<Shape> = getShapeSaver()
+
 
     @FXML
     private fun onPaintFieldMousePressed(mouseEvent: MouseEvent) {
@@ -58,12 +60,12 @@ class PaintController {
         val y = mouseEvent.y
         startPoint = Point(x, y)
         shape = when (shapesBox?.value) {
-            ShapesNames.LINE.label -> Line(x, y, x, y)
-            ShapesNames.CIRCLE.label -> Circle(x, y, 0.0, fillColorBox?.value)
-            ShapesNames.TRIANGLE.label -> Triangle()
-            ShapesNames.RECTANGLE.label -> Rectangle(0.0, 0.0)
-            ShapesNames.STAR.label -> Star()
-            ShapesNames.ELLIPSE.label -> Ellipse(x, y, 0.0, 0.0)
+            ShapesNames.LINE -> Line(x, y, x, y)
+            ShapesNames.CIRCLE -> Circle(x, y, 0.0, fillColorBox?.value)
+            ShapesNames.TRIANGLE -> Triangle()
+            ShapesNames.RECTANGLE -> Rectangle(0.0, 0.0)
+            ShapesNames.STAR -> Star()
+            ShapesNames.ELLIPSE -> Ellipse(x, y, 0.0, 0.0)
             else -> null
         }
         shape?.run {
@@ -83,7 +85,7 @@ class PaintController {
         val y = mouseEvent.y
         startPoint?.let { point ->
             shape?.let { shape ->
-                calculateShape(shape, point, x, y)
+                calculateShape(shape, point, x, y)   // лямбду написать чтобы лет для двух сразу скрины есть
             }
         }
     }
@@ -121,7 +123,7 @@ class PaintController {
             title = SAVE_TITLE
             extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.json)", "*.json"))
             showSaveDialog(stage)?.let { file ->
-                saveShapes()?.let { ShapesSaverImpl.save(file, it) }
+                saveShapes()?.let { shapeSaver.save(file, it) }  //
             }
         }
     }
@@ -134,7 +136,7 @@ class PaintController {
             showOpenDialog(stage)?.let {
                 paintField?.children?.run {
                     clear()
-                    addAll(ShapesSaverImpl.load(it))
+                    addAll(shapeSaver.load(it))
                 }
             }
         }
@@ -145,7 +147,6 @@ class PaintController {
     private fun initialize() {
         shapesBox?.items?.addAll(
             ShapesNames.values()
-                .map { value -> value.label }
         )
         instrumentsBox?.items?.addAll(
             listOf(
@@ -155,10 +156,10 @@ class PaintController {
         )
         strokeColorBox?.value = Color.BLACK
         controlsBox?.children?.let {
-            for (item in it) {
+            it.forEach {
                 labelsBox?.children?.addAll(
                     Label().apply {
-                        this.text = item.accessibleText
+                        this.text = it.accessibleText
                     }
                 )
             }
@@ -166,19 +167,19 @@ class PaintController {
     }
 
     private fun saveShapes(): List<Shape>? {
-        paintField.let {
-            return it?.children?.map {
-                it as Shape
+        paintField.let { pane ->
+            return pane?.children?.map { node ->
+                node as Shape // проверочку
             }
         }
     }
 
 
     private companion object {
-        private const val CHOOSE = "Выбрать"
-        private const val FIGURE = "Фигура"
-        private const val SAVE_TITLE = "Сохранить файл"
-        private const val LOAD_TITLE = "Загрузить файл"
+        const val CHOOSE = "Выбрать"
+        const val FIGURE = "Фигура"
+        const val SAVE_TITLE = "Сохранить файл"
+        const val LOAD_TITLE = "Загрузить файл"
     }
 
     val changeCursor = { shape: Shape, cursor: Cursor -> if (instrumentsBox?.value == CHOOSE) shape.cursor = cursor }

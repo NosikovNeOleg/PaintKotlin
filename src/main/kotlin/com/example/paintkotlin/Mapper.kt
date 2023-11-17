@@ -2,18 +2,20 @@ package com.example.paintkotlin
 
 import javafx.scene.paint.Paint
 import javafx.scene.shape.*
-import java.lang.NullPointerException
 
 interface Mapper<T, E> {
     fun mapToDto(input: T): E?
-    fun mapFromDto(input: E): T?
+    fun mapFromDto(input: E): T
 }
 
+fun getShapeMapper(): Mapper<Shape,ShapeDTO> {
+    return ShapeMapperImpl()
+}
 
-object ShapeMapper : Mapper<Shape, ShapeDTO> {
+class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
     override fun mapToDto(input: Shape): ShapeDTO? {
 
-        return when (input) {
+        return when (input) {   // разнести как в калькуляторе
             is Rectangle -> ShapeDTO(
                 input.stroke.toString(),
                 input.fill.toString(),
@@ -32,7 +34,7 @@ object ShapeMapper : Mapper<Shape, ShapeDTO> {
                 input.strokeWidth,
                 ShapesNames.TRIANGLE
             ).apply {
-                points = ArrayList(input.points)
+                points = input.points
             }
 
             is Circle -> ShapeDTO(
@@ -76,7 +78,7 @@ object ShapeMapper : Mapper<Shape, ShapeDTO> {
                 input.strokeWidth,
                 ShapesNames.STAR
             ).apply {
-                points = ArrayList(input.points)
+                points = input.points
             }
 
             else -> null
@@ -90,7 +92,7 @@ object ShapeMapper : Mapper<Shape, ShapeDTO> {
         return when (input.name) {
             ShapesNames.LINE -> {
                 Line(
-                    input.startX ?: throw NullPointerException(),
+                    input.startX ?: throw NullPointerException(),  // убрать
                     input.startY ?: throw NullPointerException(),
                     input.endX ?: throw NullPointerException(),
                     input.endY ?: throw NullPointerException()

@@ -9,4 +9,8 @@ enum class ShapesNames(val label: String) {
     ELLIPSE("Эллипс"),
     CIRCLE("Круг");
 
+    override fun toString(): String {
+        return label
+    }
+
 }
