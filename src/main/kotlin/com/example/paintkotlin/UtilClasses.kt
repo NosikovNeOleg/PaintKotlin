@@ -1,5 +1,6 @@
 package com.example.paintkotlin
 
+import javafx.collections.ObservableList
 import javafx.scene.shape.Polygon
 import javafx.scene.shape.Rectangle
 import javafx.scene.shape.Shape
@@ -12,17 +13,17 @@ class Triangle : Polygon()
 class Star : Polygon()
 
 //@Serializable
-abstract class ShapeDTO(
+open class ShapeDTO(
     open val stroke: String,
     open val fill: String,
     open val strokeWidth: Double,
     var layoutX: Double? = null,
-    var layoutY: Double? = null,
+    var layoutY: Double? = null
 ) {
     constructor(shape : Shape) : this(
-        shape.stroke.toString(),
-        shape.fill.toString(),
-        shape.strokeWidth
+        stroke = shape.stroke.toString(),
+        fill = shape.fill.toString(),
+        strokeWidth = shape.strokeWidth
     )
 }
 
@@ -39,16 +40,19 @@ data class RectangleDTO(
     fill = fill,
     strokeWidth = strokeWidth,
 ) {
-    constructor(shape: Rectangle) : this(
-        x = shape.x,
-        y = shape.y,
-        width = shape.width,
-        height = shape.height,
+    constructor(rectangle: Rectangle) : this(
+        x = rectangle.x,
+        y = rectangle.y,
+        width = rectangle.width,
+        height = rectangle.height,
+        stroke = rectangle.stroke.toString(),
+        fill = rectangle.fill.toString(),
+        strokeWidth = rectangle.strokeWidth
     )
 }
 
-open class PolygonDTO(
-    open val points: MutableList<Double>,
+abstract class PolygonDTO(
+    open val points: List<Double>,
     override val stroke: String,
     override val fill: String,
     override val strokeWidth: Double,
@@ -59,7 +63,7 @@ open class PolygonDTO(
 )
 
 data class TriangleDTO(
-    override val points: MutableList<Double>,
+    override val points: List<Double>,
     override val stroke: String,
     override val fill: String,
     override val strokeWidth: Double,
@@ -70,7 +74,7 @@ data class TriangleDTO(
     strokeWidth = strokeWidth,
 )
 data class StarDTO(
-    override val points: MutableList<Double>,
+    override val points: List<Double>,
     override val stroke: String,
     override val fill: String,
     override val strokeWidth: Double,
