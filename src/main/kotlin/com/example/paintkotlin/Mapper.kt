@@ -1,5 +1,6 @@
 package com.example.paintkotlin
 
+import javafx.scene.paint.Paint
 import javafx.scene.shape.*
 
 interface Mapper<T, E> {
@@ -13,7 +14,6 @@ fun getShapeMapper(): Mapper<Shape, ShapeDTO> {
 
 class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
     override fun mapToDto(source: Shape): ShapeDTO? {
-        val (fill,stroke) = source
         return when (source) {
             is Rectangle -> mapToRectangleDto(source)
             is Triangle -> mapToTriangleDto(source)
@@ -38,26 +38,21 @@ class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
             is StarDTO -> mapFromStarDto(source)
             else -> null
         }?.apply {
-            this.layoutX = source.layoutX
-            this.layoutY = source.layoutY
-            this.fill = source.fill
-            this.stroke = source.stroke
+            this.layoutX = source.layoutX ?: 0.0
+            this.layoutY = source.layoutY ?: 0.0
+            this.fill = Paint.valueOf(source.fill)
+            this.stroke = Paint.valueOf(source.stroke)
             this.strokeWidth = source.strokeWidth
         }
     }
 
     private fun mapToRectangleDto(source: Rectangle): RectangleDTO = RectangleDTO(source)
-    private fun mapToLineDto(source: Line): LineDTO = LineDTO()
-    private fun mapToTriangleDto(source: Triangle): TriangleDTO = TriangleDTO(
-        source.stroke.toString(),
-        source.fill.toString(),
-        source.strokeWidth,
-        points = source.points
-    )
+    private fun mapToLineDto(source: Line): LineDTO = LineDTO(source)
+    private fun mapToTriangleDto(source: Triangle): TriangleDTO = TriangleDTO(source)
 
-    private fun mapToStarDto(source: Star): StarDTO = StarDTO()
-    private fun mapToCircleDto(source: Circle): CircleDTO = CircleDTO()
-    private fun mapToEllipseDto(source: Ellipse): EllipseDTO = EllipseDTO()
+    private fun mapToStarDto(source: Star): StarDTO = StarDTO(source)
+    private fun mapToCircleDto(source: Circle): CircleDTO = CircleDTO(source)
+    private fun mapToEllipseDto(source: Ellipse): EllipseDTO = EllipseDTO(source)
 
     private fun mapFromRectangleDto(source: RectangleDTO): Rectangle = Rectangle().apply {
         x = source.x
@@ -93,12 +88,4 @@ class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
         radiusX = source.radiusX
         radiusY = source.radiusY
     }
-}
-
-private operator fun Shape.component2(): Any {
-    return this.stroke
-}
-
-private operator fun Shape.component1(): Any {
-    return this.fill
 }

@@ -1,4 +1,4 @@
-package com.example.paintkotlin
+package com.example.paintkotlin.Applications
 
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
@@ -24,6 +24,4 @@ class PaintApplication : Application() {
     }
 }
 
-fun main() {
-    Application.launch(PaintApplication::class.java)
-}
+

@@ -1,6 +1,6 @@
 package com.example.paintkotlin
 
-enum class ShapesNames(val label: String) {
+enum class ShapesNames(private val label: String) {
 
     LINE("Линия"),
     RECTANGLE("Прямоугольник"),

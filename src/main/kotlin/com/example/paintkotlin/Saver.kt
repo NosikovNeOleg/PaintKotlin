@@ -1,10 +1,9 @@
 package com.example.paintkotlin
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import javafx.scene.shape.Shape
-import java.io.*
-import java.lang.reflect.Type
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.File
 
 
 interface Saver<T> {
@@ -13,32 +12,25 @@ interface Saver<T> {
 }
 
 
-public fun getShapeSaver() : Saver<Shape> {
+fun getShapeSaver(): Saver<Shape> {
     return ShapesSaverImpl()
 }
+
 private class ShapesSaverImpl : Saver<Shape> {
 
-    val shapeMapper : Mapper<Shape,ShapeDTO> = getShapeMapper()
+    val shapeMapper: Mapper<Shape, ShapeDTO> = getShapeMapper()
 
     override fun save(file: File, input: List<Shape>) {
-        file.writeText(Gson().toJson(input.map {
-            shapeMapper.mapToDto(it)
-        }))
+        file.writeText(Json.encodeToString(input.map{shapeMapper.mapToDto(it)}))
     }
 
 
     override fun load(file: File): List<Shape> {
-        return try {
-            val type: Type = object : TypeToken<List<ShapeDTO?>?>() {}.type
-            return (Gson().fromJson<List<ShapeDTO>>(file.readText(), type)).map {
-                shapeMapper.mapFromDto(it)
-            }
-        } catch (e: ClassCastException) {
-            listOf() // TODO доработать момент падения
-        } catch (_: IllegalStateException) {
-            listOf() // TODO доработать момент падения
-        } catch (npe: NullPointerException) {
-            listOf()// TODO доработать момент падения
-        }
+        return Json.decodeFromString<List<ShapeDTO>>(file.readText()).map {
+            shapeMapper.mapFromDto(it)!! }
+
+//        return Json.en(file.readText(), type).map {
+//            shapeMapper.mapFromDto(it)
+//        }.requireNoNulls()
     }
 }

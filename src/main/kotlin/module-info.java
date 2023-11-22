@@ -1,13 +1,13 @@
 module com.example.paintkotlin {
 
     requires kotlin.stdlib;
-
-    requires kotlinx.serialization.core;
     requires javafx.graphics;
     requires javafx.fxml;
     requires javafx.controls;
-    requires com.google.gson;
+    requires kotlinx.serialization.json;
 
+    opens com.example.paintkotlin.Applications to javafx.fxml,javafx.graphics;
+    opens com.example.paintkotlin.Controllers to javafx.fxml,javafx.graphics;
     opens com.example.paintkotlin to javafx.fxml,javafx.graphics;
     exports com.example.paintkotlin;
 }

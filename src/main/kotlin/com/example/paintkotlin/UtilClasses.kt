@@ -1,9 +1,9 @@
 package com.example.paintkotlin
 
-import javafx.collections.ObservableList
-import javafx.scene.shape.Polygon
-import javafx.scene.shape.Rectangle
-import javafx.scene.shape.Shape
+
+import javafx.scene.shape.*
+import kotlinx.serialization.Serializable
+
 
 data class Point(
     val x: Double, val y: Double
@@ -11,133 +11,60 @@ data class Point(
 
 class Triangle : Polygon()
 class Star : Polygon()
-
-//@Serializable
-open class ShapeDTO(
-    open val stroke: String,
-    open val fill: String,
-    open val strokeWidth: Double,
+@Serializable
+abstract class ShapeDTO private constructor(
+    val name: String,
+    val stroke: String,
+    val fill: String,
+    val strokeWidth: Double,
     var layoutX: Double? = null,
     var layoutY: Double? = null
 ) {
-    constructor(shape : Shape) : this(
+    constructor(shape: Shape) : this(
         stroke = shape.stroke.toString(),
         fill = shape.fill.toString(),
-        strokeWidth = shape.strokeWidth
+        strokeWidth = shape.strokeWidth,
+        name = "ser"
     )
 }
 
-data class RectangleDTO(
-    val x: Double,
-    val y: Double,
-    val width: Double,
-    val height: Double,
-    override val stroke: String,
-    override val fill: String,
-    override val strokeWidth: Double,
-) : ShapeDTO(
-    stroke = stroke,
-    fill = fill,
-    strokeWidth = strokeWidth,
-) {
-    constructor(rectangle: Rectangle) : this(
-        x = rectangle.x,
-        y = rectangle.y,
-        width = rectangle.width,
-        height = rectangle.height,
-        stroke = rectangle.stroke.toString(),
-        fill = rectangle.fill.toString(),
-        strokeWidth = rectangle.strokeWidth
-    )
+class RectangleDTO(rectangle: Rectangle) : ShapeDTO(rectangle) {
+    val x: Double = rectangle.x
+    val y: Double = rectangle.y
+    val width: Double = rectangle.width
+    val height: Double = rectangle.height
 }
 
-abstract class PolygonDTO(
-    open val points: List<Double>,
-    override val stroke: String,
-    override val fill: String,
-    override val strokeWidth: Double,
-) : ShapeDTO(
-    stroke = stroke,
-    fill = fill,
-    strokeWidth = strokeWidth,
-)
+abstract class PolygonDTO(polygon: Polygon) : ShapeDTO(polygon) {
+    val points: List<Double> = polygon.points
+}
 
-data class TriangleDTO(
-    override val points: List<Double>,
-    override val stroke: String,
-    override val fill: String,
-    override val strokeWidth: Double,
-) : PolygonDTO(
-    points = points,
-    stroke = stroke,
-    fill = fill,
-    strokeWidth = strokeWidth,
-)
-data class StarDTO(
-    override val points: List<Double>,
-    override val stroke: String,
-    override val fill: String,
-    override val strokeWidth: Double,
-) : PolygonDTO(
-    points = points,
-    stroke = stroke,
-    fill = fill,
-    strokeWidth = strokeWidth,
-)
+class TriangleDTO(triangle: Triangle) : PolygonDTO(triangle)
+class StarDTO(star: Star) : PolygonDTO(star)
 
-abstract class RoundDTO(
-    open val centerX: Double,
-    open val centerY: Double,
-    override val stroke: String,
-    override val fill: String,
-    override val strokeWidth: Double,
-) : ShapeDTO(
-    stroke = stroke,
-    fill = fill,
-    strokeWidth = strokeWidth,
-)
+abstract class RoundDTO(shape: Shape) : ShapeDTO(shape) {
+    abstract val centerX: Double
+    abstract val centerY: Double
+}
 
-data class CircleDTO(
-    val radius: Double,
-    override val stroke: String,
-    override val fill: String,
-    override val strokeWidth: Double,
-    override val centerX: Double,
-    override val centerY: Double
-) : RoundDTO(
-    stroke = stroke,
-    fill = fill,
-    strokeWidth = strokeWidth,
-    centerX = centerX,
-    centerY = centerY
-)
+class CircleDTO(circle: Circle) : RoundDTO(circle) {
+    override val centerX: Double = circle.centerX
+    override val centerY: Double = circle.centerY
+    val radius: Double = circle.radius
+}
 
-data class EllipseDTO(
-    val radiusX: Double,
-    val radiusY: Double,
-    override val stroke: String,
-    override val fill: String,
-    override val strokeWidth: Double,
-    override val centerX: Double,
-    override val centerY: Double
-) : RoundDTO(
-    stroke = stroke,
-    fill = fill,
-    strokeWidth = strokeWidth,
-    centerX = centerX,
-    centerY = centerY
-)
+class EllipseDTO(ellipse: Ellipse) : RoundDTO(ellipse) {
+    override val centerX: Double = ellipse.centerX
+    override val centerY: Double = ellipse.centerY
+    val radiusX: Double = ellipse.radiusX
+    val radiusY: Double = ellipse.radiusY
+}
 
-data class LineDTO(
-    val startX: Double,
-    val startY: Double,
-    val endY: Double,
-    val endX: Double,
-    override val stroke: String,
-    override val fill: String,
-    override val strokeWidth: Double,
-) : ShapeDTO(
-    stroke = stroke,
-    fill = fill,
-    strokeWidth = strokeWidth,
-)
+class LineDTO(line: Line) : ShapeDTO(line) {
+    val startX: Double = line.startX
+    val startY: Double = line.startY
+    val endY: Double = line.endY
+    val endX: Double = line.endX
+}
+
+
