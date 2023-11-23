@@ -1,10 +1,9 @@
-package com.example.paintkotlin
+package com.example.paintkotlin.calculators
 
-import javafx.scene.shape.Circle
-import javafx.scene.shape.Ellipse
-import javafx.scene.shape.Line
-import javafx.scene.shape.Rectangle
-import javafx.scene.shape.Shape
+import com.example.paintkotlin.Point
+import com.example.paintkotlin.Star
+import com.example.paintkotlin.Triangle
+import javafx.scene.shape.*
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt

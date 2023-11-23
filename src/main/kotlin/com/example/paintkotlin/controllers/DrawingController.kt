@@ -1,8 +1,8 @@
-package com.example.paintkotlin.Controllers
+package com.example.paintkotlin.controllers
 
 import com.example.paintkotlin.*
+import com.example.paintkotlin.calculators.PaintCalculator.calculateShape
 import javafx.event.EventHandler
-import javafx.fxml.FXML
 import javafx.scene.Cursor
 import javafx.scene.control.ColorPicker
 import javafx.scene.control.ComboBox
@@ -12,16 +12,15 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import javafx.scene.shape.*
-import javafx.stage.Stage
 
 class DrawingController(
-    private val shapesBox: ComboBox<ShapesNames>,
-    private val instrumentsBox : ComboBox<String>,
-    private val fillColorBox : ColorPicker,
-    private val strokeColorBox : ColorPicker,
-    private val controlsBox : HBox,
-    private val labelsBox: HBox,
-    private val paintField : Pane,
+    private val shapesBox: ComboBox<ShapesNames>?,
+    private val instrumentsBox: ComboBox<String>?,
+    private val fillColorBox: ColorPicker?,
+    private val strokeColorBox: ColorPicker?,
+    private val controlsBox: HBox?,
+    private val labelsBox: HBox?,
+    private val paintField: Pane?,
     //private val stage: Stage
 ) {
 
@@ -30,7 +29,7 @@ class DrawingController(
     private var isDrawing: Boolean = false
 
     public fun onPaintFieldMousePressed(mouseEvent: MouseEvent) {
-        val isChoose = instrumentsBox.value == CHOOSE
+        val isChoose = instrumentsBox?.value == CHOOSE
         if (isDrawing || isChoose) {
             return
         }
@@ -38,9 +37,9 @@ class DrawingController(
         val x = mouseEvent.x
         val y = mouseEvent.y
         startPoint = Point(x, y)
-        shape = when (shapesBox.value) {
+        shape = when (shapesBox?.value) {
             ShapesNames.LINE -> Line(x, y, x, y)
-            ShapesNames.CIRCLE -> Circle(x, y, 0.0, fillColorBox.value)
+            ShapesNames.CIRCLE -> Circle(x, y, 0.0, fillColorBox?.value)
             ShapesNames.TRIANGLE -> Triangle()
             ShapesNames.RECTANGLE -> Rectangle(0.0, 0.0)
             ShapesNames.STAR -> Star()
@@ -48,36 +47,34 @@ class DrawingController(
             else -> null
         }
         shape?.apply {
-            fill = fillColorBox.value
-            stroke = strokeColorBox.value
-            paintField.children?.add(shape)
+            fill = fillColorBox?.value
+            stroke = strokeColorBox?.value
+            paintField?.children?.add(shape)
         }
     }
 
 
     public fun onPaintFieldMouseDragged(mouseEvent: MouseEvent) {
-        val isChoose = instrumentsBox.value == CHOOSE
-        val mouseNotOnPaintField = !paintField.isHover
+        val isChoose = instrumentsBox?.value == CHOOSE
+        val mouseNotOnPaintField = paintField?.isHover == false
         if (isChoose || !isDrawing || mouseNotOnPaintField) {
             return
         }
         val x = mouseEvent.x
         val y = mouseEvent.y
-        startPoint?.let { point ->
-            shape?.let { shape ->
-                PaintCalculator.calculateShape(
-                    shape,
-                    point,
-                    x,
-                    y
-                )   // лямбду написать чтобы лет для двух сразу скрины есть
-            }
+        isBothNotNullDo(startPoint, shape) { startPoint, shape ->
+            calculateShape(
+                startPoint = startPoint,
+                shape = shape,
+                x = x,
+                y = y
+            )
         }
     }
 
-    public fun onPaintFieldMouseReleased() {
+    fun onPaintFieldMouseReleased(): Shape? {
         if (!isDrawing) {
-            return
+            return null
         }
         var dragDelta: Point? = null
         shape?.run {
@@ -88,7 +85,7 @@ class DrawingController(
             }
             addEventHandler(MouseEvent.MOUSE_RELEASED) { changeCursor(this, Cursor.DEFAULT) }
             addEventHandler(MouseEvent.MOUSE_DRAGGED, EventHandler {
-                if (instrumentsBox.value != CHOOSE) {
+                if (instrumentsBox?.value != CHOOSE) {
                     return@EventHandler
                 }
                 dragDelta?.let { delta ->
@@ -98,33 +95,31 @@ class DrawingController(
             })
         }
         isDrawing = false
+        return shape
     }
 
     init {
-        shapesBox.run {
-            items?.addAll(ShapesNames.values())
+        shapesBox?.run {
+            items.addAll(ShapesNames.values())
             value = ShapesNames.LINE
         }
 
-        instrumentsBox.items?.addAll(
+        instrumentsBox?.items?.addAll(
             listOf(
-                CHOOSE,
-                FIGURE
+                CHOOSE, FIGURE
             )
         )
-        strokeColorBox.value = Color.BLACK
-        controlsBox.children?.let {
+        strokeColorBox?.value = Color.BLACK
+        controlsBox?.children?.let {
             it.forEach {
-                labelsBox.children?.addAll(
-                    Label().apply {
-                        this.text = it.accessibleText
-                    }
-                )
+                labelsBox?.children?.addAll(Label().apply {
+                    this.text = it.accessibleText
+                })
             }
         }
     }
 
-    val changeCursor = { shape: Shape, cursor: Cursor -> if (instrumentsBox.value == CHOOSE) shape.cursor = cursor }
+    val changeCursor = { shape: Shape, cursor: Cursor -> if (instrumentsBox?.value == CHOOSE) shape.cursor = cursor }
     private operator fun Double.plus(x: Double?): Double {
         return x ?: 0.0
     }

@@ -1,5 +1,6 @@
 package com.example.paintkotlin
 
+import com.example.paintkotlin.dto.ShapeDTO
 import javafx.scene.shape.Shape
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

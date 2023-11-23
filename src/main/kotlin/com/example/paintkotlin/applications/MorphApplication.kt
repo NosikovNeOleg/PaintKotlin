@@ -1,4 +1,4 @@
-package com.example.paintkotlin.Applications
+package com.example.paintkotlin.applications
 
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
@@ -19,7 +19,7 @@ class MorphApplication : Application() {
     private companion object {
         const val WINDOW_WIDTH = 1280.0
         const val WINDOW_HEIGHT = 720.0
-        const val TITLE = "Morphing"
+        const val TITLE = "Morphing!"
         const val RESOURCE_NAME = "morf-view.fxml"
     }
 }

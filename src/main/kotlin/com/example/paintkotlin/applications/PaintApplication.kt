@@ -1,4 +1,4 @@
-package com.example.paintkotlin.Applications
+package com.example.paintkotlin.applications
 
 import javafx.application.Application
 import javafx.fxml.FXMLLoader

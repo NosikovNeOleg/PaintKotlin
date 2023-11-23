@@ -1,5 +1,6 @@
 package com.example.paintkotlin
 
+import com.example.paintkotlin.dto.*
 import javafx.scene.paint.Paint
 import javafx.scene.shape.*
 
