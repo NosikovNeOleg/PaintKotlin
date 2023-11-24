@@ -63,8 +63,8 @@ class MorphController {
 
     @FXML
     private fun morphMouseReleased() {
-        val shape = drawingController?.onPaintFieldMouseReleased()
-        if (shape == null && shape !is Polygon) {
+        val shape = drawingController?.onPaintFieldMouseReleased()  ?: return
+        if (shape !is Polygon) {
             return
         }
         shapes[FIRST] = shapes[SECOND] ?: shape

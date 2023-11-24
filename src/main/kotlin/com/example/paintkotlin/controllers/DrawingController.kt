@@ -37,7 +37,7 @@ class DrawingController(
         val x = mouseEvent.x
         val y = mouseEvent.y
         startPoint = Point(x, y)
-        shape = when (shapesBox?.value) {
+        shape = when (shapesBox?.value) {  // фабрика
             ShapesNames.LINE -> Line(x, y, x, y)
             ShapesNames.CIRCLE -> Circle(x, y, 0.0, fillColorBox?.value)
             ShapesNames.TRIANGLE -> Triangle()
@@ -124,7 +124,7 @@ class DrawingController(
         return x ?: 0.0
     }
 
-    companion object {
+    private companion object {
         const val CHOOSE = "Выбрать"
         const val FIGURE = "Фигура"
     }

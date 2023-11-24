@@ -22,13 +22,14 @@ private class ShapesSaverImpl : Saver<Shape> {
     val shapeMapper: Mapper<Shape, ShapeDTO> = getShapeMapper()
 
     override fun save(file: File, input: List<Shape>) {
-        file.writeText(Json.encodeToString(input.map{shapeMapper.mapToDto(it)}))
+        file.writeText(Json.encodeToString(input.map { shapeMapper.mapToDto(it) }))
     }
 
 
     override fun load(file: File): List<Shape> {
         return Json.decodeFromString<List<ShapeDTO>>(file.readText()).map {
-            shapeMapper.mapFromDto(it)!! }
+            shapeMapper.mapFromDto(it)!!
+        }
 
 //        return Json.en(file.readText(), type).map {
 //            shapeMapper.mapFromDto(it)

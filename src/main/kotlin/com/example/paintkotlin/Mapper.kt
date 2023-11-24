@@ -9,11 +9,13 @@ interface Mapper<T, E> {
     fun mapFromDto(input: E): T?
 }
 
+//fun <T, R> T.map(mapper: (T) -> (R)): R = mapper(this)   // добить
+
 fun getShapeMapper(): Mapper<Shape, ShapeDTO> {
     return ShapeMapperImpl()
 }
 
-class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
+private class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
     override fun mapToDto(source: Shape): ShapeDTO? {
         return when (source) {
             is Rectangle -> mapToRectangleDto(source)

@@ -15,6 +15,8 @@ import javafx.stage.FileChooser
 import javafx.stage.Stage
 
 
+
+
 class PaintController {
     @FXML
     private var shapesBoxPaint: ComboBox<ShapesNames>? = null
@@ -111,7 +113,6 @@ class PaintController {
             }
         }
     }
-
 
     private companion object {
         const val SAVE_TITLE = "Сохранить файл"

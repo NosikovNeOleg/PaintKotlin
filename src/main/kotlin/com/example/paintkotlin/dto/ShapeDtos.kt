@@ -5,6 +5,9 @@ import com.example.paintkotlin.Triangle
 import javafx.scene.shape.*
 import kotlinx.serialization.Serializable
 
+
+
+// sealed
 @Serializable
 abstract class ShapeDTO private constructor(
     val name: String,
