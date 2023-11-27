@@ -15,8 +15,6 @@ import javafx.stage.FileChooser
 import javafx.stage.Stage
 
 
-
-
 class PaintController {
     @FXML
     private var shapesBoxPaint: ComboBox<ShapesNames>? = null
@@ -106,11 +104,7 @@ class PaintController {
 
     private fun saveShapes(): List<Shape>? {
         paintFieldPaint.let { pane ->
-            return pane?.children?.filter { node ->
-                node !is Shape
-            }?.map { node ->
-                node as Shape
-            }
+            return pane?.children?.filterIsInstance<Shape>()
         }
     }
 

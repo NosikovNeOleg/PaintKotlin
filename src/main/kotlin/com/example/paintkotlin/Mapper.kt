@@ -5,11 +5,12 @@ import javafx.scene.paint.Paint
 import javafx.scene.shape.*
 
 interface Mapper<T, E> {
-    fun mapToDto(input: T): E?
-    fun mapFromDto(input: E): T?
+    fun mapToDto(source: T): E?
+    fun mapFromDto(source: E): T?
 }
 
-//fun <T, R> T.map(mapper: (T) -> (R)): R = mapper(this)   // добить
+//fun <T, R> T.map(mapper: (T) -> (R)): R = mapper(this)
+
 
 fun getShapeMapper(): Mapper<Shape, ShapeDTO> {
     return ShapeMapperImpl()
@@ -26,12 +27,13 @@ private class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
             is Star -> mapToStarDto(source)
             else -> null
         }?.apply {
+            println(this)
             this.layoutX = source.layoutX
             this.layoutY = source.layoutY
         }
     }
 
-    override fun mapFromDto(source: ShapeDTO): Shape? {
+    override fun mapFromDto(source: ShapeDTO): Shape {
         return when (source) {
             is RectangleDTO -> mapFromRectangleDto(source)
             is TriangleDTO -> mapFromTriangleDto(source)
@@ -39,8 +41,7 @@ private class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
             is CircleDTO -> mapFromCircleDto(source)
             is LineDTO -> mapFromLineDto(source)
             is StarDTO -> mapFromStarDto(source)
-            else -> null
-        }?.apply {
+        }.apply {
             this.layoutX = source.layoutX ?: 0.0
             this.layoutY = source.layoutY ?: 0.0
             this.fill = Paint.valueOf(source.fill)

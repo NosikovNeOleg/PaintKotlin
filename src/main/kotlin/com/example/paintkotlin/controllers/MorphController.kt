@@ -70,8 +70,8 @@ class MorphController {
         shapes[FIRST] = shapes[SECOND] ?: shape
         shapes[SECOND] = shape
         val twoShapesIsNotOnThePane = paintFieldMorph?.children?.size?.equals(2) != true
-        val shapesIsNotPolynoms = shapes[FIRST] !is Polygon || shapes[SECOND] !is Polygon
-        if (twoShapesIsNotOnThePane || shapesIsNotPolynoms) {
+        val shapesIsNotPolygons = shapes[FIRST] !is Polygon || shapes[SECOND] !is Polygon
+        if (twoShapesIsNotOnThePane || shapesIsNotPolygons) {
             sliderMorph?.isDisable = true
             return
         }
@@ -101,7 +101,6 @@ class MorphController {
             labelsBox = labelsBoxMorph,
             controlsBox = controlsBoxMorph,
             paintField = paintFieldMorph,
-            // stage = stage)
         )
         sliderMorph?.isDisable = true
     }

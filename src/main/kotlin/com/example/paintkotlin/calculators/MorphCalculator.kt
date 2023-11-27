@@ -21,8 +21,6 @@ object MorphCalculator {
         with(morphingShape) {
             val tempPoints = points.toList()
             points.clear()
-
-
             points.addAll(tempPoints.zip(targetShape.points) { morphPoint, targetPoint ->
                 morphPoint + (((targetPoint - morphPoint) * sliderValue / 10) * increment)
             })

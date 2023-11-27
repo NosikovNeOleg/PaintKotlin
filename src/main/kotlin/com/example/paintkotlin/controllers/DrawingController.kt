@@ -1,7 +1,10 @@
 package com.example.paintkotlin.controllers
 
-import com.example.paintkotlin.*
+import com.example.paintkotlin.Point
+import com.example.paintkotlin.ShapesNames
 import com.example.paintkotlin.calculators.PaintCalculator.calculateShape
+import com.example.paintkotlin.isBothNotNullDo
+import com.example.paintkotlin.shapeFactory
 import javafx.event.EventHandler
 import javafx.scene.Cursor
 import javafx.scene.control.ColorPicker
@@ -11,52 +14,44 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
-import javafx.scene.shape.*
+import javafx.scene.shape.Shape
 
 class DrawingController(
     private val shapesBox: ComboBox<ShapesNames>?,
     private val instrumentsBox: ComboBox<String>?,
     private val fillColorBox: ColorPicker?,
     private val strokeColorBox: ColorPicker?,
-    private val controlsBox: HBox?,
+    controlsBox: HBox?,
     private val labelsBox: HBox?,
     private val paintField: Pane?,
-    //private val stage: Stage
 ) {
 
     private var shape: Shape? = null
     private var startPoint: Point? = null
     private var isDrawing: Boolean = false
 
-    public fun onPaintFieldMousePressed(mouseEvent: MouseEvent) {
+    fun onPaintFieldMousePressed(mouseEvent: MouseEvent) {
         val isChoose = instrumentsBox?.value == CHOOSE
         if (isDrawing || isChoose) {
             return
         }
         isDrawing = true
-        val x = mouseEvent.x
-        val y = mouseEvent.y
-        startPoint = Point(x, y)
-        shape = when (shapesBox?.value) {  // фабрика
-            ShapesNames.LINE -> Line(x, y, x, y)
-            ShapesNames.CIRCLE -> Circle(x, y, 0.0, fillColorBox?.value)
-            ShapesNames.TRIANGLE -> Triangle()
-            ShapesNames.RECTANGLE -> Rectangle(0.0, 0.0)
-            ShapesNames.STAR -> Star()
-            ShapesNames.ELLIPSE -> Ellipse(x, y, 0.0, 0.0)
-            else -> null
-        }
-        shape?.apply {
-            fill = fillColorBox?.value
-            stroke = strokeColorBox?.value
-            paintField?.children?.add(shape)
+        val tempPoint = Point(mouseEvent.x, mouseEvent.y)
+        if (shapesBox != null && fillColorBox != null && strokeColorBox != null && paintField != null) {
+            shape = shapeFactory().getShape(shapeName = shapesBox.value, startPoint = tempPoint, color = fillColorBox.value)
+                    .apply {
+                        fill = fillColorBox.value
+                        stroke = strokeColorBox.value
+                        startPoint = tempPoint
+                        paintField.children?.add(this)
+                    }
         }
     }
 
 
-    public fun onPaintFieldMouseDragged(mouseEvent: MouseEvent) {
+    fun onPaintFieldMouseDragged(mouseEvent: MouseEvent) {
         val isChoose = instrumentsBox?.value == CHOOSE
-        val mouseNotOnPaintField = paintField?.isHover == false
+        val mouseNotOnPaintField = paintField?.isHover != true
         if (isChoose || !isDrawing || mouseNotOnPaintField) {
             return
         }
@@ -64,10 +59,7 @@ class DrawingController(
         val y = mouseEvent.y
         isBothNotNullDo(startPoint, shape) { startPoint, shape ->
             calculateShape(
-                startPoint = startPoint,
-                shape = shape,
-                x = x,
-                y = y
+                startPoint = startPoint, shape = shape, x = x, y = y
             )
         }
     }

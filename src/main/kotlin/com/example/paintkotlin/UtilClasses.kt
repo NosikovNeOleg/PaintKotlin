@@ -10,5 +10,7 @@ data class Point(
 class Triangle : Polygon()
 class Star : Polygon()
 
+class EmptyShape : Shape()
+
 
 
