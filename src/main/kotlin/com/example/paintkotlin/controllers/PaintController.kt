@@ -15,7 +15,7 @@ import javafx.stage.FileChooser
 import javafx.stage.Stage
 
 
-class PaintController {
+class PaintController{
     @FXML
     private var shapesBoxPaint: ComboBox<ShapesNames>? = null
 
@@ -78,7 +78,9 @@ class PaintController {
             showOpenDialog(stage)?.let {
                 paintFieldPaint?.children?.run {
                     clear()
-                    addAll(shapeSaver.load(it))
+                    addAll(shapeSaver.load(it).forEachWithReturn {
+                        drawingController?.addHandlers(it)
+                    })
                 }
             }
         }
@@ -106,6 +108,11 @@ class PaintController {
         paintFieldPaint.let { pane ->
             return pane?.children?.filterIsInstance<Shape>()
         }
+    }
+
+    private fun <T> Iterable<T>.forEachWithReturn(action: (T) -> Unit): Iterable<T> {
+        for (element in this) action(element)
+        return this
     }
 
     private companion object {

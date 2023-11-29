@@ -6,10 +6,10 @@ import javafx.scene.shape.*
 
 interface Mapper<T, E> {
     fun mapToDto(source: T): E?
-    fun mapFromDto(source: E): T?
+    fun mapFromDto(source: E): T
 }
 
-//fun <T, R> T.map(mapper: (T) -> (R)): R = mapper(this)
+fun <T, R> T.mapDTO(mapper: (T) -> (R)): R = mapper(this)
 
 
 fun getShapeMapper(): Mapper<Shape, ShapeDTO> {
@@ -27,7 +27,6 @@ private class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
             is Star -> mapToStarDto(source)
             else -> null
         }?.apply {
-            println(this)
             this.layoutX = source.layoutX
             this.layoutY = source.layoutY
         }
@@ -53,7 +52,6 @@ private class ShapeMapperImpl : Mapper<Shape, ShapeDTO> {
     private fun mapToRectangleDto(source: Rectangle): RectangleDTO = RectangleDTO(source)
     private fun mapToLineDto(source: Line): LineDTO = LineDTO(source)
     private fun mapToTriangleDto(source: Triangle): TriangleDTO = TriangleDTO(source)
-
     private fun mapToStarDto(source: Star): StarDTO = StarDTO(source)
     private fun mapToCircleDto(source: Circle): CircleDTO = CircleDTO(source)
     private fun mapToEllipseDto(source: Ellipse): EllipseDTO = EllipseDTO(source)

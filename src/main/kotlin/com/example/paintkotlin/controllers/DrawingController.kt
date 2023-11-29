@@ -115,9 +115,31 @@ class DrawingController(
     private operator fun Double.plus(x: Double?): Double {
         return x ?: 0.0
     }
+    fun addHandlers(shape : Shape) : Shape {
+        shape.run {
+            var dragDelta: Point? = null
+            addEventHandler(MouseEvent.MOUSE_ENTERED) { changeCursor(this, Cursor.HAND) }
+            addEventHandler(MouseEvent.MOUSE_PRESSED) {
+                changeCursor(this, Cursor.CLOSED_HAND)
+                dragDelta = Point(this.layoutX - it.sceneX, this.layoutY - it.sceneY)
+            }
+            addEventHandler(MouseEvent.MOUSE_RELEASED) { changeCursor(this, Cursor.DEFAULT) }
+            addEventHandler(MouseEvent.MOUSE_DRAGGED, EventHandler {
+                if (instrumentsBox?.value != CHOOSE) {
+                    return@EventHandler
+                }
+                dragDelta?.let { delta ->
+                    layoutX = it.sceneX + delta.x
+                    layoutY = it.sceneY + delta.y
+                }
+            })
+        }
+        return shape
+    }
 
     private companion object {
         const val CHOOSE = "Выбрать"
         const val FIGURE = "Фигура"
     }
 }
+
