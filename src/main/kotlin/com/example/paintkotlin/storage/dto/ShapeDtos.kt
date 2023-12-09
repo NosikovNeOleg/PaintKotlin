@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.example.paintkotlin.dto
+package com.example.paintkotlin.storage.dto
 
 import com.example.paintkotlin.EmptyShape
 import com.example.paintkotlin.Star

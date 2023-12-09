@@ -1,6 +1,8 @@
-package com.example.paintkotlin
+package com.example.paintkotlin.storage
 
-import com.example.paintkotlin.dto.*
+import com.example.paintkotlin.Star
+import com.example.paintkotlin.Triangle
+import com.example.paintkotlin.storage.dto.*
 import javafx.scene.paint.Paint
 import javafx.scene.shape.*
 

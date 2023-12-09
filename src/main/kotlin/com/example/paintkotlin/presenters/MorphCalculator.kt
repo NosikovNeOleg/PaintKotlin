@@ -1,11 +1,11 @@
-package com.example.paintkotlin.calculators
+package com.example.paintkotlin.presenters
 
 import com.example.paintkotlin.controllers.MorphController.Companion.FIRST
 import com.example.paintkotlin.controllers.MorphController.Companion.SECOND
 import javafx.scene.shape.Polygon
 import javafx.scene.shape.Shape
 
-object MorphCalculator {
+object MorphPresenter {
     fun morphShapes(shapes: HashMap<String, Shape>, sliderValue: Double, isIncrement: Boolean) {
         val firstShapeType = shapes[FIRST]
         val secondShapeType = shapes[SECOND]

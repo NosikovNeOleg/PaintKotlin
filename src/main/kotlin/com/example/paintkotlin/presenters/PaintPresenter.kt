@@ -1,4 +1,4 @@
-package com.example.paintkotlin.calculators
+package com.example.paintkotlin.presenters
 
 import com.example.paintkotlin.Point
 import com.example.paintkotlin.Star
@@ -9,7 +9,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 
-object PaintCalculator {
+object PaintPresenter {
 
     fun calculateShape(shape: Shape, startPoint: Point, x: Double, y: Double) {
         startPoint.let {

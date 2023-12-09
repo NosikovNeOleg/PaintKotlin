@@ -1,9 +1,9 @@
 package com.example.paintkotlin.controllers
 
-import com.example.paintkotlin.Saver
+import com.example.paintkotlin.storage.Saver
 import com.example.paintkotlin.ShapesNames
 import com.example.paintkotlin.applications.MorphApplication
-import com.example.paintkotlin.getShapeSaver
+import com.example.paintkotlin.storage.getShapeSaver
 import javafx.fxml.FXML
 import javafx.scene.control.ColorPicker
 import javafx.scene.control.ComboBox

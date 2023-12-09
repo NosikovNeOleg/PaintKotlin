@@ -1,7 +1,7 @@
 package com.example.paintkotlin.controllers
 
 import com.example.paintkotlin.ShapesNames
-import com.example.paintkotlin.calculators.MorphCalculator
+import com.example.paintkotlin.presenters.MorphPresenter
 import javafx.fxml.FXML
 import javafx.scene.control.ColorPicker
 import javafx.scene.control.ComboBox
@@ -82,7 +82,7 @@ class MorphController {
     private fun onSliderChanged() {
         val sliderCurrentValue = sliderMorph?.value ?: 0.0
         val isIncrement = sliderCurrentValue > (sliderPastValue ?: 0.0)
-        MorphCalculator.morphShapes(shapes, sliderCurrentValue, isIncrement)
+        MorphPresenter.morphShapes(shapes, sliderCurrentValue, isIncrement)
         sliderPastValue = sliderCurrentValue
     }
 

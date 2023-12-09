@@ -2,9 +2,9 @@ package com.example.paintkotlin.controllers
 
 import com.example.paintkotlin.Point
 import com.example.paintkotlin.ShapesNames
-import com.example.paintkotlin.calculators.PaintCalculator.calculateShape
+import com.example.paintkotlin.presenters.PaintPresenter.calculateShape
 import com.example.paintkotlin.isBothNotNullDo
-import com.example.paintkotlin.shapeFactory
+import com.example.paintkotlin.presenters.shapeFactory
 import javafx.event.EventHandler
 import javafx.scene.Cursor
 import javafx.scene.control.ColorPicker
