@@ -9,7 +9,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 
-object PaintPresenter {
+object PaintCalculator {
 
     fun calculateShape(shape: Shape, startPoint: Point, x: Double, y: Double) {
         startPoint.let {

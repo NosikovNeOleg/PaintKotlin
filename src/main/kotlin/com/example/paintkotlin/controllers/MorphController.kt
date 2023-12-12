@@ -63,7 +63,7 @@ class MorphController {
 
     @FXML
     private fun morphMouseReleased() {
-        val shape = drawingController?.onPaintFieldMouseReleased()  ?: return
+        val shape = drawingController?.onPaintFieldMouseReleased() ?: return
         if (shape !is Polygon) {
             return
         }
@@ -81,7 +81,7 @@ class MorphController {
     @FXML
     private fun onSliderChanged() {
         val sliderCurrentValue = sliderMorph?.value ?: 0.0
-        val isIncrement = sliderCurrentValue > (sliderPastValue ?: 0.0)
+        val isIncrement = if (sliderCurrentValue > (sliderPastValue ?: 0.0)) 1 else -1
         MorphPresenter.morphShapes(shapes, sliderCurrentValue, isIncrement)
         sliderPastValue = sliderCurrentValue
     }

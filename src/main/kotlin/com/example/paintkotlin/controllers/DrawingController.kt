@@ -2,9 +2,11 @@ package com.example.paintkotlin.controllers
 
 import com.example.paintkotlin.Point
 import com.example.paintkotlin.ShapesNames
-import com.example.paintkotlin.presenters.PaintPresenter.calculateShape
 import com.example.paintkotlin.isBothNotNullDo
+import com.example.paintkotlin.presenters.PaintCalculator.calculateShape
 import com.example.paintkotlin.presenters.shapeFactory
+import com.example.paintkotlin.storage.ShapesStorage
+import com.example.paintkotlin.storage.ShapesStorage.getStorage
 import javafx.event.EventHandler
 import javafx.scene.Cursor
 import javafx.scene.control.ColorPicker
@@ -29,6 +31,7 @@ class DrawingController(
     private var shape: Shape? = null
     private var startPoint: Point? = null
     private var isDrawing: Boolean = false
+    private val shapesStorage: ShapesStorage = getStorage()
 
     fun onPaintFieldMousePressed(mouseEvent: MouseEvent) {
         val isChoose = instrumentsBox?.value == CHOOSE
@@ -38,7 +41,8 @@ class DrawingController(
         isDrawing = true
         val tempPoint = Point(mouseEvent.x, mouseEvent.y)
         if (shapesBox != null && fillColorBox != null && strokeColorBox != null && paintField != null) {
-            shape = shapeFactory().getShape(shapeName = shapesBox.value, startPoint = tempPoint, color = fillColorBox.value)
+            shape =
+                shapeFactory().getShape(shapeName = shapesBox.value, startPoint = tempPoint, color = fillColorBox.value)
                     .apply {
                         fill = fillColorBox.value
                         stroke = strokeColorBox.value
@@ -65,27 +69,11 @@ class DrawingController(
     }
 
     fun onPaintFieldMouseReleased(): Shape? {
-        if (!isDrawing) {
+        if (!isDrawing || shape == null) {
             return null
         }
-        var dragDelta: Point? = null
-        shape?.run {
-            addEventHandler(MouseEvent.MOUSE_ENTERED) { changeCursor(this, Cursor.HAND) }
-            addEventHandler(MouseEvent.MOUSE_PRESSED) {
-                changeCursor(this, Cursor.CLOSED_HAND)
-                dragDelta = Point(this.layoutX - it.sceneX, this.layoutY - it.sceneY)
-            }
-            addEventHandler(MouseEvent.MOUSE_RELEASED) { changeCursor(this, Cursor.DEFAULT) }
-            addEventHandler(MouseEvent.MOUSE_DRAGGED, EventHandler {
-                if (instrumentsBox?.value != CHOOSE) {
-                    return@EventHandler
-                }
-                dragDelta?.let { delta ->
-                    layoutX = it.sceneX + delta.x
-                    layoutY = it.sceneY + delta.y
-                }
-            })
-        }
+        addHandlers(shape)
+        shapesStorage.addShape(shape)
         isDrawing = false
         return shape
     }
@@ -115,8 +103,9 @@ class DrawingController(
     private operator fun Double.plus(x: Double?): Double {
         return x ?: 0.0
     }
-    fun addHandlers(shape : Shape) : Shape {
-        shape.run {
+
+    fun addHandlers(shape: Shape?): Shape? {
+        shape?.run {
             var dragDelta: Point? = null
             addEventHandler(MouseEvent.MOUSE_ENTERED) { changeCursor(this, Cursor.HAND) }
             addEventHandler(MouseEvent.MOUSE_PRESSED) {

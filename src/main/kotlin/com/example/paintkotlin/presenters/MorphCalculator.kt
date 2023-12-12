@@ -6,18 +6,17 @@ import javafx.scene.shape.Polygon
 import javafx.scene.shape.Shape
 
 object MorphPresenter {
-    fun morphShapes(shapes: HashMap<String, Shape>, sliderValue: Double, isIncrement: Boolean) {
+    fun morphShapes(shapes: HashMap<String, Shape>, sliderValue: Double, increment: Int) {
         val firstShapeType = shapes[FIRST]
         val secondShapeType = shapes[SECOND]
         if (firstShapeType is Polygon && secondShapeType is Polygon) {
-            morphPolygons(shapes, sliderValue, isIncrement)
+            morphPolygons(shapes, sliderValue, increment)
         }
     }
 
-    private fun morphPolygons(shapes: HashMap<String, Shape>, sliderValue: Double, isIncrement: Boolean) {
+    private fun morphPolygons(shapes: HashMap<String, Shape>, sliderValue: Double, increment: Int) {
         val morphingShape = shapes[FIRST] as Polygon
         val targetShape = shapes[SECOND] as Polygon
-        val increment = if (isIncrement) 1 else -1
         with(morphingShape) {
             val tempPoints = points.toList()
             points.clear()

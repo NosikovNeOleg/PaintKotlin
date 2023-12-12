@@ -1,8 +1,8 @@
 package com.example.paintkotlin.controllers
 
-import com.example.paintkotlin.storage.Saver
 import com.example.paintkotlin.ShapesNames
 import com.example.paintkotlin.applications.MorphApplication
+import com.example.paintkotlin.storage.Saver
 import com.example.paintkotlin.storage.getShapeSaver
 import javafx.fxml.FXML
 import javafx.scene.control.ColorPicker
@@ -15,7 +15,7 @@ import javafx.stage.FileChooser
 import javafx.stage.Stage
 
 
-class PaintController{
+class PaintController {
     @FXML
     private var shapesBoxPaint: ComboBox<ShapesNames>? = null
 
@@ -64,10 +64,9 @@ class PaintController{
         FileChooser().apply {
             title = SAVE_TITLE
             extensionFilters.add(FileChooser.ExtensionFilter("JSON files (*.json)", "*.json"))
-            showSaveDialog(stage)?.let { file ->
-                saveShapes()?.let { shapeSaver.save(file, it) }
-            }
+            showSaveDialog(stage)?.let { file -> shapeSaver.saveToFIle(file) }
         }
+
     }
 
     @FXML
@@ -78,7 +77,7 @@ class PaintController{
             showOpenDialog(stage)?.let {
                 paintFieldPaint?.children?.run {
                     clear()
-                    addAll(shapeSaver.load(it).forEachWithReturn {
+                    addAll(shapeSaver.loadFromFile(it).forEachWithReturn {
                         drawingController?.addHandlers(it)
                     })
                 }
