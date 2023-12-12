@@ -31,12 +31,6 @@ class MorphController {
     private var instrumentsGridPane: GridPane? = null
 
     @FXML
-    private var labelsBoxMorph: HBox? = null
-
-    @FXML
-    private var controlsBoxMorph: HBox? = null
-
-    @FXML
     private var paintFieldMorph: Pane? = null
 
     @FXML
