@@ -21,7 +21,7 @@ object MorphPresenter {
             val tempPoints = points.toList()
             points.clear()
             points.addAll(tempPoints.zip(targetShape.points) { morphPoint, targetPoint ->
-                morphPoint + (((targetPoint - morphPoint) * sliderValue / 10) * increment)
+                morphPoint + ((((targetPoint - morphPoint) / 100)  * sliderValue) * increment)
             })
         }
     }
