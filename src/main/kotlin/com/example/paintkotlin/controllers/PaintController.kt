@@ -8,6 +8,7 @@ import javafx.fxml.FXML
 import javafx.scene.control.ColorPicker
 import javafx.scene.control.ComboBox
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.shape.Shape
@@ -29,10 +30,7 @@ class PaintController {
     private var strokeColorBoxPaint: ColorPicker? = null
 
     @FXML
-    private var labelsBoxPaint: HBox? = null
-
-    @FXML
-    private var controlsBoxPaint: HBox? = null
+    private var instrumentsGridPane: GridPane? = null
 
     @FXML
     private var paintFieldPaint: Pane? = null
@@ -97,9 +95,8 @@ class PaintController {
             instrumentsBox = instrumentsBoxPaint,
             fillColorBox = fillColorBoxPaint,
             strokeColorBox = strokeColorBoxPaint,
-            labelsBox = labelsBoxPaint,
-            controlsBox = controlsBoxPaint,
             paintField = paintFieldPaint,
+            instrumentsGridPane = instrumentsGridPane,
         )
     }
 

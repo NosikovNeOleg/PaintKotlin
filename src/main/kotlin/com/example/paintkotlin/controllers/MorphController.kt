@@ -7,6 +7,7 @@ import javafx.scene.control.ColorPicker
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Slider
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.shape.Polygon
@@ -25,6 +26,9 @@ class MorphController {
 
     @FXML
     private var strokeColorBoxMorph: ColorPicker? = null
+
+    @FXML
+    private var instrumentsGridPane: GridPane? = null
 
     @FXML
     private var labelsBoxMorph: HBox? = null
@@ -98,9 +102,8 @@ class MorphController {
             instrumentsBox = instrumentsBoxMorph,
             fillColorBox = fillColorBoxMorph,
             strokeColorBox = strokeColorBoxMorph,
-            labelsBox = labelsBoxMorph,
-            controlsBox = controlsBoxMorph,
             paintField = paintFieldMorph,
+            instrumentsGridPane = instrumentsGridPane,
         )
         sliderMorph?.isDisable = true
     }

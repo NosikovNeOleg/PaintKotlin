@@ -13,7 +13,7 @@ import javafx.scene.control.ColorPicker
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.input.MouseEvent
-import javafx.scene.layout.HBox
+import javafx.scene.layout.GridPane
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import javafx.scene.shape.Shape
@@ -23,9 +23,8 @@ class DrawingController(
     private val instrumentsBox: ComboBox<String>?,
     private val fillColorBox: ColorPicker?,
     private val strokeColorBox: ColorPicker?,
-    controlsBox: HBox?,
-    private val labelsBox: HBox?,
     private val paintField: Pane?,
+    private val instrumentsGridPane: GridPane?
 ) {
 
     private var shape: Shape? = null
@@ -90,11 +89,11 @@ class DrawingController(
             )
         )
         strokeColorBox?.value = Color.BLACK
-        controlsBox?.children?.let {
-            it.forEach {
-                labelsBox?.children?.addAll(Label().apply {
-                    this.text = it.accessibleText
-                })
+        if (instrumentsGridPane?.children != null) {
+            for (i in 0..instrumentsGridPane.children.size) {
+                instrumentsGridPane.add(
+                    Label(instrumentsGridPane.children[i].accessibleText), i, 0
+                )
             }
         }
     }
